@@ -41,9 +41,105 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
+
+  const todos = [{
+    id : 1,
+    title : "Go to school",
+    completed : false
+  },
+  {
+    id : 2,
+    title : "Plan a trip",
+    completed : true
+  }
+]
   
   const app = express();
   
   app.use(bodyParser.json());
+
+  app.get('/todos',(req,res) => {
+    res.status(200).json(todos)
+  })
+
+  app.get('/todos/:id',(req,res) => {
+    const id = req.params.id;
+    const filteredTodo = todos.filter((todo) => id == todo.id);
+    console.log(filteredTodo)
+    if(filteredTodo.length === 0){
+      res.sendStatus(404)
+    }else{
+      res.status(200).json(filteredTodo);
+    }
+  })
+
+  // 3. POST /todos - Create a new todo item
+  // Description: Creates a new todo item.
+  // Request Body: JSON object representing the todo item.
+  // Response: 201 Created with the ID of the created todo item in JSON format. eg: {id: 1}
+  // Example: POST http://localhost:3000/todos
+  // Request Body: { "title": "Buy groceries", "completed": false, description: "I should buy groceries" }
   
+  app.post('/todos',(req,res) => {
+    const randomId = Math.floor(Math.random()*1000) + 1;
+    const title = req.body.title;
+    const completed = req.body.completed;
+    const description = req.body.description;
+
+    const data = {
+      id : randomId,
+      title : title,
+      completed : completed,        
+      description : description
+    }
+
+    todos.push(data);
+
+    res.status(201).json({id : randomId})
+  })
+
+  // 4. PUT /todos/:id - Update an existing todo item by ID
+  //   Description: Updates an existing todo item identified by its ID.
+  //   Request Body: JSON object representing the updated todo item.
+  //   Response: 200 OK if the todo item was found and updated, or 404 Not Found if not found.
+  //   Example: PUT http://localhost:3000/todos/123
+  //   Request Body: { "title": "Buy groceries", "completed": true }
+
+  app.put('/todos/:id', (req,res) => {
+    const id = req.params.id;
+    const index = todos.findIndex( (todo) => todo.id == id);
+    const todo = req.body;
+    todo.id = id;
+
+    if( index != -1){
+      todos.splice(index,1);
+      todos.push(todo);
+      res.status(200).json({ update :"Done"});
+    }else{
+      res.status(404).send('Not found')
+    }
+  })
+
+  // 5. DELETE /todos/:id - Delete a todo item by ID
+  //   Description: Deletes a todo item identified by its ID.
+  //   Response: 200 OK if the todo item was found and deleted, or 404 Not Found if not found.
+  //   Example: DELETE http://localhost:3000/todos/123
+
+  app.delete('/todos/:id', (req,res) => {
+    const id = req.params.id;
+    const index = todos.findIndex( (todo) => todo.id == id);
+
+    if( index != -1){
+      todos.splice(index,1);
+      res.status(200).send('Ok');
+    }else{
+      res.status(404).send('Not found')
+    }
+  })
+
+  app.use((req, res) => {
+    res.status(404).send('404 - Not Found');
+  });
+
+  app.listen(3000)
   module.exports = app;
