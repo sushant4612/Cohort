@@ -69,7 +69,7 @@ class Calculator {
     return this.result;
   }
 
-  calculate(expression){
+  calculate(expression){       
     this.result = eval(expression.replace(/\s+/g,""));
 
     if(this.result === Infinity){
