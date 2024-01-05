@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch</title>
+</head>
+<body>
+    <button onclick="debouncecall()">Submit</button>
+    <h1 id="name"></h1>
+    <img id= 'profile' src="" alt="">
+</body>
+<script>
+    // function call(){
+    //     fetch('https://randomuser.me/api/')
+    //     .then( (res) => {
+    //         res.json()
+    //         .then( (data) => {
+    //             const email = data["results"][0].email;
+    //             const link = data["results"][0].picture.large;
+    //             document.getElementById('name').innerHTML = email;
+    //             document.getElementById('profile').setAttribute('src',link);
+    //         })
+    //     })
+    // }
+    let timeout;
+    function debouncecall(){
+        clearTimeout(timeout)
+        timeout = setTimeout(call,1000);
+    }
+
+    async function call(){
+        const res = await fetch('https://randomuser.me/api/');
+        const data = await res.json();
+        const email = data["results"][0].email;
+        const link = data["results"][0].picture.large;
+        document.getElementById('name').innerHTML = email;
+        document.getElementById('profile').setAttribute('src',link);
+    }
+</script>
+</html>
