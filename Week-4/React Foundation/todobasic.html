@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input id="title" type="text" placeholder="title">
+    <br>
+    <br>
+    <input id="discription" type="text" placeholder="discription">
+    <br>
+    <br>
+    <button onclick="populate()" >Add todo</button>
+    <br>
+    <div id="container"></div>
+</body>
+<script>
+    function populate(){
+        const title = document.getElementById('title').value;
+        const discription = document.getElementById('discription').value;
+        const container = document.getElementById('container');
+        // console.log(title);
+        // console.log(discription);
+        container.innerHTML = container.innerHTML + `
+        <div>${title}</div>
+        <div>${discription}</div>
+        <button>Mark as done</button>
+        <br></br>
+        `
+    }
+    
+</script>
+</html>
