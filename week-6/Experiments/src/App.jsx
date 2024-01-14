@@ -1,42 +1,28 @@
-import { useState , memo, useEffect } from "react"
-import axios from "axios"
+import { useMemo, useState  } from "react"
 
 function App() {
+  const [count, setCount] = useState(0);
+  const [inputValue,setInputValue] = useState(1);
 
-  const [number, setNumber] = useState(1);
-
+  let ans = useMemo(()=> {
+    let sum = 0;
+    for(let i = 1; i <= inputValue; i++){
+      sum += i;
+    }
+    return sum;
+  },[inputValue]);
+  
 
   return (
     <>
-    <button onClick={() => setNumber(1)}>1</button>
-    <button onClick={() => setNumber(2)}>2</button>
-    <button onClick={() => setNumber(3)}>3</button>
-    <button onClick={() => setNumber(4)}>4</button>
-    <Todo number = {number}/>
+    <input type="number" onChange={(e) => {
+      setInputValue(e.target.value)
+    }} />
+    <br />
+    <h1>Sum is {ans}</h1>
+    <button onClick={() => setCount(count+1)}>Counter ({count})</button>
     </>
   )
-}
-
-
-function Todo({number}){
-
-  const [todo,setTodos] = useState({})
-
-  useEffect(() => {
-    axios(`https://sum-server.100xdevs.com/todo?id=${number}`)
-    .then( function(res){
-      setTodos(res.data.todo)
-    })
-  },[number])
-
-  return <div>
-    <h2>
-      {todo.title}
-    </h2>
-    <h3>
-      {todo.description}
-    </h3>
-  </div>
 }
 
 
