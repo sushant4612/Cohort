@@ -10,23 +10,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg_1 = require("pg");
-const client = new pg_1.Client({
-    connectionString: "postgresql://postgres:mysecretpassword@localhost:5432/postgres?sslmode=disable"
-});
-function createUsersTable() {
+// Async function to insert data into a table
+function insertData() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield client.connect();
-        const result = yield client.query(`
-        CREATE TABLE users (
-            id SERIAL PRIMARY KEY,
-            username VARCHAR(50) UNIQUE NOT NULL,
-            email VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-        console.log(result);
+        const client = new pg_1.Client({
+            connectionString: "postgresql://sushantsp14:xhe7PKJu0Ymz@ep-little-haze-61942247.us-east-2.aws.neon.tech/test?sslmode=require/users"
+        });
+        try {
+            yield client.connect(); // Ensure client connection is established
+            const createQuery = `CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);`;
+            const res = yield client.query(createQuery);
+            console.log(res);
+        }
+        catch (err) {
+            console.error('Error during the creation:', err);
+        }
+        finally {
+            yield client.end(); // Close the client connection
+        }
     });
 }
-createUsersTable();
-client.connect();
+insertData();
